@@ -27,7 +27,7 @@ export async function runRecoveryBatch(
   const startedAt = new Date().toISOString();
   const mode = resolveExecutorMode(options.mode ?? "auto");
 
-  let events =
+  const events =
     options.events ?? generateSyntheticBatch(options.size ?? 60);
 
   if (options.injectGracefulFailure !== false && events.length > 0) {

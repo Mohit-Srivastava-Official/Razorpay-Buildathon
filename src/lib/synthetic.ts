@@ -90,6 +90,7 @@ const FAILURES: Array<{
 
 const AMOUNTS = [
   19900, 49900, 99900, 149900, 249900, 499900, 999900, 1499900, 2499900,
+  2999900, 4999900, // above auto ceiling → human gate / escalation
 ];
 
 function pick<T>(arr: T[]): T {
@@ -121,10 +122,13 @@ export function generateSyntheticBatch(
     const first = pick(FIRST);
     const last = pick(LAST);
     const amountPaise = pick(AMOUNTS);
+    // Occasionally seed high prior attempts to exercise stop / escalate rules
     const attemptCount =
       failure.riskClass === "checkout_abandonment"
         ? 0
-        : 1 + Math.floor(Math.random() * 3);
+        : Math.random() < 0.12
+          ? 5 + Math.floor(Math.random() * 2)
+          : 1 + Math.floor(Math.random() * 3);
     const ageHours = 1 + Math.floor(Math.random() * 72);
 
     const event: AtRiskEvent = {
